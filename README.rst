@@ -1,6 +1,12 @@
 pullover
 ========
 
+.. image:: https://img.shields.io/pypi/status/pullover.svg
+   :target: https://pypi.python.org/pypi/pullover
+.. image:: https://img.shields.io/pypi/v/pullover.svg
+   :target: https://pypi.python.org/pypi/pullover
+.. image:: https://img.shields.io/pypi/pyversions/pullover.svg
+   :target: https://pypi.python.org/pypi/pullover
 .. image:: https://travis-ci.org/gebn/pullover.svg?branch=master
    :target: https://travis-ci.org/gebn/pullover
 .. image:: https://coveralls.io/repos/github/gebn/pullover/badge.svg?branch=master
