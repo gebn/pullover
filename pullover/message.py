@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import logging
 import six
 import abc
 import datetime
 import pytz
 import backoff
 import requests
+
+
+logger = logging.getLogger(__name__)
 
 
 class SendError(Exception):
@@ -140,6 +144,8 @@ class Message(object):
                      it.
         :return: A message response object.
         """
+
+        logger.info('Sending %s to %s using %s', self, user, application)
 
         @backoff.on_predicate(backoff.constant,
                               lambda response: not response.ok,
