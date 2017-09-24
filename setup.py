@@ -30,6 +30,7 @@ setup(
     install_requires=[
         'backoff',
         'requests',
+        'pytz',
         'six>=1.9.0'
     ],
     test_suite='nose.collector',
