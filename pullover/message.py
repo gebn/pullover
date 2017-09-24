@@ -147,8 +147,18 @@ class Message(object):
 
         logger.info('Sending %s to %s using %s', self, user, application)
 
+        def should_retry(response):
+            """
+            Decides whether to retry sending a message given a response.
+
+            :param response: The response to analyse.
+            :return: True if the original request should be retried; false
+                     otherwise.
+            """
+            return not response.ok and not (400 <= response.status_code < 500)
+
         @backoff.on_predicate(backoff.constant,
-                              lambda response: not response.ok,
+                              should_retry,
                               max_tries=5,
                               interval=self._RETRY_INTERVAL)
         def send_request(sess, prepped):
