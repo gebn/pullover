@@ -19,6 +19,10 @@ class SendError(Exception):
 
 
 class ClientSendError(SendError):
+    """
+    Represents a message send error where we're at fault.
+    """
+
     def __init__(self, status, errors):
         """
         Initialise a new error.
@@ -32,7 +36,16 @@ class ClientSendError(SendError):
 
 
 class ServerSendError(SendError):
+    """
+    Represents a message send error where Pushover is experiencing issues.
+    """
+
     def __init__(self, response):
+        """
+        Initialise a new error.
+
+        :param response: The raw requests response received.
+        """
         super(ServerSendError, self).__init__()
         self.response = response
 
