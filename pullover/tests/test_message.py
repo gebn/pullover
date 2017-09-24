@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 import unittest
 
-from pullover.message import ClientSendError
+import requests
+
+from pullover.message import ClientSendError, ServerSendError
 
 
 class TestClientSendError(unittest.TestCase):
@@ -17,3 +19,10 @@ class TestClientSendError(unittest.TestCase):
     def test_error(self):
         self.assertEqual(ClientSendError(self._STATUS, self._ERRORS).errors,
                          self._ERRORS)
+
+
+class TestServerSendError(unittest.TestCase):
+
+    def test_response(self):
+        response = requests.Response()
+        self.assertEqual(ServerSendError(response).response, response)
