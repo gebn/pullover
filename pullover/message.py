@@ -8,18 +8,17 @@ import pytz
 import backoff
 import requests
 
+from pullover.exceptions import PulloverError
+
 
 logger = logging.getLogger(__name__)
 
 
-class SendError(Exception):
-
-    __metaclass__ = abc.ABCMeta
-
+class SendError(PulloverError):
     """
     Raised by SendResponse.raise_for_status() if a request was not successful.
     """
-    pass
+    __metaclass__ = abc.ABCMeta
 
 
 class ClientSendError(SendError):

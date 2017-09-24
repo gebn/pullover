@@ -2,6 +2,7 @@
 from pkg_resources import get_distribution, DistributionNotFound
 import os
 
+from pullover.exceptions import PulloverError
 from pullover.application import Application
 from pullover.message import Message
 from pullover.user import User
