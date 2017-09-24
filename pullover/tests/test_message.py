@@ -58,12 +58,10 @@ class TestSendResponse(unittest.TestCase):
         self.assertFalse(
             SendResponse(self._response(json=self._FAIL_JSON)).ok)
 
-    @responses.activate
     def test_raise_for_status_server_5xx(self):
         with self.assertRaises(ServerSendError):
             SendResponse(self._response(status=503)).raise_for_status()
 
-    @responses.activate
     def test_raise_for_status_server_invalid_json(self):
         with self.assertRaises(ServerSendError):
             SendResponse(self._response(body='invalid_json')) \
