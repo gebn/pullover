@@ -37,9 +37,6 @@ Demo
         george = User('8v57nhg578hh5n0h887hh04245')
         message = Message('foo bar', title='hello')
         message.send(aws, george)
-    except ValueError:
-        # invalid argument
-        pass
     except PulloverError:
         # sending error
         pass
