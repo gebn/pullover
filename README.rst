@@ -1,6 +1,11 @@
 pullover
 ========
 
+.. image:: https://travis-ci.org/gebn/pullover.svg?branch=master
+   :target: https://travis-ci.org/gebn/pullover
+.. image:: https://coveralls.io/repos/github/gebn/pullover/badge.svg?branch=master
+   :target: https://coveralls.io/github/gebn/pullover?branch=master
+
 The simplest Pushover API wrapper for Python.
 
 Features
