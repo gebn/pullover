@@ -30,6 +30,7 @@ setup(
     install_requires=[
         'backoff',
         'requests',
+        'python-dateutil',
         'pytz',
         'six>=1.9.0'
     ],
@@ -54,5 +55,10 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules'
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'pullover = pullover.__main__:main_cli',
+        ]
+    }
 )

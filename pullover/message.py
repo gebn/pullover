@@ -66,7 +66,7 @@ class SendResponse(object):
 
         :return: True if it was, false otherwise.
         """
-        return self._status == 1
+        return self.status == 1
 
     def __init__(self, response):
         """
@@ -77,13 +77,13 @@ class SendResponse(object):
         self._response = response
         try:
             json = response.json()
-            self._status = json['status']
-            self._id = json['request']
-            self._errors = json['errors'] if 'errors' in json else []
+            self.status = json['status']
+            self.id = json['request']
+            self.errors = json['errors'] if 'errors' in json else []
         except ValueError:
-            self._status = None
-            self._id = None
-            self._errors = []
+            self.status = None
+            self.id = None
+            self.errors = []
 
     def raise_for_status(self):
         """
@@ -92,12 +92,12 @@ class SendResponse(object):
         :raises SendError: If this response indicates a request failed.
         """
         # transport error
-        if self._status is None:
+        if self.status is None:
             raise ServerSendError(self._response)
 
         # got a valid response, but may be to an invalid request
         if not self.ok:
-            raise ClientSendError(self._status, self._errors)
+            raise ClientSendError(self.status, self.errors)
 
 
 @six.python_2_unicode_compatible
