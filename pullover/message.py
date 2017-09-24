@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import six
+import abc
 import datetime
 import pytz
 import backoff
@@ -8,6 +9,9 @@ import requests
 
 
 class SendError(Exception):
+
+    __metaclass__ = abc.ABCMeta
+
     """
     Raised by SendResponse.raise_for_status() if a request was not successful.
     """
