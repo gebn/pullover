@@ -9,9 +9,9 @@ from pullover.user import User
 
 
 __title__ = 'pullover'
+__description__ = 'The simplest Pushover API wrapper for Python.'
 __author__ = 'George Brighton'
 __license__ = 'MIT'
-__description__ = 'The simplest Pushover API wrapper for Python.'
 __copyright__ = 'Copyright 2017 George Brighton'
 
 
