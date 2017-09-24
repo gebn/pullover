@@ -3,5 +3,6 @@ coverage
 coveralls
 mock
 requests
+responses
 six>=1.9.0
 pytz
