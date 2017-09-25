@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import six
 import unittest
 import datetime
 import pytz
@@ -130,6 +129,32 @@ class TestMessage(unittest.TestCase):
 
         Message(self._BODY, self._TITLE, self._TIMESTAMP, self._URL,
                 self._PRIORITY).send(self._APP, self._USER)
+        self.assertEqual(len(responses.calls), 1)  # no retry on response.ok
+
+    @responses.activate
+    def test_send_retry_5xx(self):
+        def callback(_):
+            return 503, {}, ''
+
+        responses.add_callback(responses.POST, Message._ENDPOINT,
+                               callback=callback)
+
+        response = self._MESSAGE.send(self._APP, self._USER,
+                                      retry_interval=0.001)  # to speed up test
+        self.assertFalse(response.ok)
+        self.assertEqual(len(responses.calls), 5)
+
+    @responses.activate
+    def test_send_no_retry_4xx(self):
+        def callback(_):
+            return 400, {}, ''
+
+        responses.add_callback(responses.POST, Message._ENDPOINT,
+                               callback=callback)
+
+        response = self._MESSAGE.send(self._APP, self._USER)
+        self.assertFalse(response.ok)
+        self.assertEqual(len(responses.calls), 1)
 
     def test_str(self):
         self.assertEqual(str(self._MESSAGE), 'Message({0})'.format(self._BODY))

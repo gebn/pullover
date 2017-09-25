@@ -108,7 +108,6 @@ class Message(object):
 
     _ENDPOINT = 'https://api.pushover.net/1/messages.json'
     _EPOCH_START = datetime.datetime(1970, 1, 1, tzinfo=pytz.utc)
-    _RETRY_INTERVAL = 5
 
     LOWEST = -2
     LOW = -1
@@ -134,7 +133,8 @@ class Message(object):
         self._url = url
         self._priority = priority
 
-    def send(self, application, user):
+    def send(self, application, user, timeout=3, retry_interval=5,
+             max_tries=5):
         """
         Send this message to a user, making it originate from a given
         application. This method guarantees not to throw any exceptions.
@@ -142,6 +142,12 @@ class Message(object):
         :param application: The application to send the message from.
         :param user: The user to send the message to. All devices will receive
                      it.
+        :param timeout: The number of seconds to allow for each request to
+                        Pushover. Defaults to 3s.
+        :param retry_interval: The amount of time to wait between requests.
+                               Defaults to 5s.
+        :param max_tries: The number of failures to allow before giving up.
+                          Defaults to 5.
         :return: A message response object.
         """
 
@@ -159,10 +165,10 @@ class Message(object):
 
         @backoff.on_predicate(backoff.constant,
                               should_retry,
-                              max_tries=5,
-                              interval=self._RETRY_INTERVAL)
+                              max_tries=max_tries,
+                              interval=retry_interval)
         def send_request(sess, prepped):
-            return sess.send(prepped)
+            return sess.send(prepped, timeout=timeout)
 
         request = requests.Request(
             'POST',
