@@ -66,6 +66,8 @@ def _parse_argv(argv):
     parser.add_argument('-p', '--priority',
                         type=int,
                         help='the integer priority of the message',
+                        choices=(Message.LOWEST, Message.LOW, Message.NORMAL,
+                                 Message.HIGH),
                         default=0)
     parser.add_argument('-t', '--title',
                         type=util.decode_cli_arg,
