@@ -10,6 +10,13 @@ import os
 import contextlib
 
 from pullover import __main__ as main, Message
+from pullover.__main__ import EnvDefault
+
+
+class TestEnvDefault(unittest.TestCase):
+    def test_no_env(self):
+        with self.assertRaises(ValueError):
+            EnvDefault(None)
 
 
 @contextlib.contextmanager
