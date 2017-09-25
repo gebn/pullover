@@ -26,8 +26,8 @@ def _suppress_stderr():
 # TODO make this default, and only require a wrapper for when these *aren't*
 #      required
 def _declare_app_user(f):
-    @mock.patch.dict(os.environ, {'PUSHOVER_APP_ID': 'id',
-                                  'PUSHOVER_USER_TOKEN': 'token'})
+    @mock.patch.dict(os.environ, {'PUSHOVER_APP_TOKEN': 'token',
+                                  'PUSHOVER_USER_KEY': 'key'})
     @functools.wraps(f)
     def wrapper(self):
         f(self)
@@ -56,30 +56,30 @@ class TestParseArgs(unittest.TestCase):
                                           ['-vvvv']).verbosity,
                          4)
 
-    @mock.patch.dict(os.environ, {'PUSHOVER_USER_TOKEN': 'token'})
+    @mock.patch.dict(os.environ, {'PUSHOVER_USER_KEY': 'key'})
     def test_app_explicit(self):
         self.assertEqual(main._parse_argv(self._BASE_ARGV + ['-a', 'foo']).app,
                          'foo')
 
     @_declare_app_user
     def test_app_implicit(self):
-        self.assertEqual(main._parse_argv(self._BASE_ARGV).app, 'id')
+        self.assertEqual(main._parse_argv(self._BASE_ARGV).app, 'token')
 
-    @mock.patch.dict(os.environ, {'PUSHOVER_USER_TOKEN': 'token'})
+    @mock.patch.dict(os.environ, {'PUSHOVER_USER_KEY': 'key'})
     def test_app_missing(self):
         with self.assertRaises(SystemExit), _suppress_stderr():
             _ = main._parse_argv(self._BASE_ARGV).app
 
-    @mock.patch.dict(os.environ, {'PUSHOVER_APP_ID': 'id'})
+    @mock.patch.dict(os.environ, {'PUSHOVER_APP_TOKEN': 'token'})
     def test_user_explicit(self):
         self.assertEqual(
             main._parse_argv(self._BASE_ARGV + ['-u', 'foo']).user, 'foo')
 
     @_declare_app_user
     def test_user_implicit(self):
-        self.assertEqual(main._parse_argv(self._BASE_ARGV).user, 'token')
+        self.assertEqual(main._parse_argv(self._BASE_ARGV).user, 'key')
 
-    @mock.patch.dict(os.environ, {'PUSHOVER_APP_ID': 'id'})
+    @mock.patch.dict(os.environ, {'PUSHOVER_APP_TOKEN': 'token'})
     def test_user_missing(self):
         with self.assertRaises(SystemExit), _suppress_stderr():
             _ = main._parse_argv(self._BASE_ARGV).user

@@ -53,16 +53,16 @@ def _parse_argv(argv):
                         default=0)
     parser.add_argument('-a', '--app',
                         action=EnvDefault,
-                        env='PUSHOVER_APP_ID',
+                        env='PUSHOVER_APP_TOKEN',
                         type=util.decode_cli_arg,
-                        help='the application ID to send from; defaults to '
-                             'PUSHOVER_APP_ID')
+                        help='the application token to send from; defaults to '
+                             'PUSHOVER_APP_TOKEN')
     parser.add_argument('-u', '--user',
                         action=EnvDefault,
-                        env='PUSHOVER_USER_TOKEN',
+                        env='PUSHOVER_USER_KEY',
                         type=util.decode_cli_arg,
-                        help='the user token to send to; defaults to '
-                             'PUSHOVER_USER_TOKEN')
+                        help='the user key to send to; defaults to '
+                             'PUSHOVER_USER_KEY')
     parser.add_argument('-p', '--priority',
                         type=int,
                         help='the integer priority of the message',
