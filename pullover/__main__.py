@@ -54,7 +54,7 @@ def _parse_argv(argv):
                         help='the timestamp of the message, in ISO 8601 '
                              'format; defaults to now')
     parser.add_argument('--url',
-                        type=dateutil.parser.parse,
+                        type=util.decode_cli_arg,
                         help='a url to include in footer of the message')
     parser.add_argument('message',
                         type=util.decode_cli_arg,
