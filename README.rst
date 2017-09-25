@@ -36,13 +36,28 @@ Demo
 
 .. code-block:: python
 
-    from pullover import Application, User, Message, PulloverError
+    from pullover import Application, User, Message, SendError
+
+
+    # high-level API
+
+    response = pullover.send('foo bar', title='hello', 'user key', 'app token')
+    if response.ok:
+        print(response.id)  # 647d2300-702c-4b38-8b2f-d56326ae460b
+
+
+    # low-level API
 
     try:
-        aws = Application('57tn23v578n9887nvh2g5892')
-        george = User('8v57nhg578hh5n0h887hh04245')
+        aws = Application('app token')
+        george = User('user key')
         message = Message('foo bar', title='hello')
-        message.send(aws, george)
-    except PulloverError:
-        # sending error
-        pass
+        response = message.send(aws, george)
+        response.raise_for_status()
+        print(response.id)  # 647d2300-702c-4b38-8b2f-d56326ae460b
+    except ClientSendError as e:
+        # it was our fault
+        print(e.status, e.errors)
+    except ServerSendError:
+        # Pushover is having issues
+        print(e.response.text)

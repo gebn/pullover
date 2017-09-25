@@ -4,7 +4,8 @@ import os
 
 from pullover.exceptions import PulloverError
 from pullover.application import Application
-from pullover.message import Message
+from pullover.message import Message, SendError, ClientSendError, \
+    ServerSendError
 from pullover.user import User
 
 
