@@ -8,6 +8,7 @@ import pytz
 import backoff
 import requests
 
+import pullover
 from pullover.exceptions import PulloverError
 
 
@@ -166,6 +167,10 @@ class Message(object):
         request = requests.Request(
             'POST',
             self._ENDPOINT,
+            headers={
+                'User-Agent': '{0}/{1}'.format(pullover.__title__,
+                                               pullover.__version__)
+            },
             data={
                 'message': self._body,
                 'title': self._title,
