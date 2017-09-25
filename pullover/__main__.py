@@ -14,6 +14,26 @@ from pullover import util, Message, User, Application
 logger = logging.getLogger(__name__)
 
 
+class EnvDefault(argparse.Action):
+    """
+    Uses an environment variable as the default value for an argument. If the
+    specified environment variable is not set, the argument becomes required.
+    Adapted from https://stackoverflow.com/a/10551190.
+    """
+
+    def __init__(self, env, required=True, default=None, **kwargs):
+        if env is None:
+            raise ValueError('env must be provided')
+        if env in os.environ:
+            default = os.environ[env]
+            required = False
+        super(EnvDefault, self).__init__(default=default, required=required,
+                                         **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, values)
+
+
 def _parse_argv(argv):
     """
     Interpret command line arguments.
@@ -32,15 +52,17 @@ def _parse_argv(argv):
                         action='count',
                         default=0)
     parser.add_argument('-a', '--app',
+                        action=EnvDefault,
+                        env='PUSHOVER_APP_ID',
                         type=util.decode_cli_arg,
                         help='the application ID to send from; defaults to '
-                             'PUSHOVER_APP_ID',
-                        default=os.getenv('PUSHOVER_APP_ID'))
+                             'PUSHOVER_APP_ID')
     parser.add_argument('-u', '--user',
+                        action=EnvDefault,
+                        env='PUSHOVER_USER_TOKEN',
                         type=util.decode_cli_arg,
                         help='the user token to send to; defaults to '
-                             'PUSHOVER_USER_TOKEN',
-                        default=os.getenv('PUSHOVER_USER_TOKEN'))
+                             'PUSHOVER_USER_TOKEN')
     parser.add_argument('-p', '--priority',
                         type=int,
                         help='the integer priority of the message',
