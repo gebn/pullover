@@ -34,24 +34,31 @@ Installation
 Demo
 ----
 
+The following code snippets demonstrate how to use the main features of pullover.
+
+High-level API
+~~~~~~~~~~~~~~
+
 .. code-block:: python
 
-    from pullover import Application, User, Message, SendError
+    import pullover
 
-
-    # high-level API
-
-    response = pullover.send('foo bar', title='hello', 'user key', 'app token')
+    response = pullover.send('message', 'user key', 'app token')
     if response.ok:
         print(response.id)  # 647d2300-702c-4b38-8b2f-d56326ae460b
 
+Low-level API
+~~~~~~~~~~~~~
 
-    # low-level API
+.. code-block:: python
+
+    from pullover import Application, User, Message, ClientSendError, \
+        ServerSendError
 
     try:
         aws = Application('app token')
         george = User('user key')
-        message = Message('foo bar', title='hello')
+        message = Message('message', title='hello')
         response = message.send(aws, george)
         response.raise_for_status()
         print(response.id)  # 647d2300-702c-4b38-8b2f-d56326ae460b
