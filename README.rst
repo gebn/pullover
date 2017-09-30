@@ -45,13 +45,13 @@ Installation
 
     $ pip install pullover
 
-Demo
-----
+Module
+-------
 
-The following code snippets demonstrate how to use the main features of pullover.
+The following code snippets demonstrate the main features of pullover.
 
-High-level API
-~~~~~~~~~~~~~~
+High-level
+~~~~~~~~~~
 
 .. code-block:: python
 
@@ -61,8 +61,8 @@ High-level API
     if response.ok:
         print(response.id)  # 647d2300-702c-4b38-8b2f-d56326ae460b
 
-Low-level API
-~~~~~~~~~~~~~
+Low-level
+~~~~~~~~~
 
 .. code-block:: python
 
@@ -82,3 +82,46 @@ Low-level API
     except ServerSendError:
         # Pushover is having issues
         print(e.response.text)
+
+CLI
+---
+
+The CLI supports the same functionality as the library.
+
+::
+
+    $ pullover -a <app_token> -u <user_key> hello!
+    647d2300-702c-4b38-8b2f-d56326ae460b
+    $ export PUSHOVER_APP_TOKEN=token
+    $ export PUSHOVER_USER_KEY=key
+    $ pullover hello!
+    647d2300-702c-4b38-8b2f-d56326ae460b
+    $ pullover --help
+    usage: pullover [-h] [-V] [-v] -a APP -u USER [-p PRIORITY] [-t TITLE]
+                    [--timestamp TIMESTAMP] [--url URL] [--url-title URL_TITLE]
+                    message
+
+    The simplest Pushover API wrapper for Python.
+
+    positional arguments:
+      message               the message content to send
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -V, --version         show program's version number and exit
+      -v, --verbosity       increase output verbosity
+      -a APP, --app APP     the application token to send from; defaults to
+                            PUSHOVER_APP_TOKEN
+      -u USER, --user USER  the user key to send to; defaults to PUSHOVER_USER_KEY
+      -p PRIORITY, --priority PRIORITY
+                            the priority of the message, either an integer or
+                            string (e.g. '0' or 'normal')
+      -t TITLE, --title TITLE
+                            the title of the message; defaults to the name of the
+                            sending application
+      --timestamp TIMESTAMP
+                            the timestamp of the message, in ISO 8601 format;
+                            defaults to now
+      --url URL             a url to include in footer of the message
+      --url-title URL_TITLE
+                            the URL title; requires --url
