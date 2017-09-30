@@ -45,14 +45,13 @@ class DependencyAction(argparse.Action):
         if depends_on is None:
             raise ValueError('Argument must have a dependency')
         self._depends_on = depends_on
-        self._dest = dest
 
     def __call__(self, parser, namespace, values, option_string=None):
         if values and getattr(namespace, self._depends_on) is None:
             parser.error(
                 '{0} requires {1} to be specified'.format(option_string,
                                                           self._depends_on))
-        setattr(namespace, self._dest, values)
+        setattr(namespace, self.dest, values)
 
 
 def _parse_argv(argv):
