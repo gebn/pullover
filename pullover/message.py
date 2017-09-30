@@ -106,7 +106,11 @@ class Message(object):
     Represents a Pushover message.
     """
 
+    # if more endpoints are ever supported, both of these need abstracting from
+    # this class
     _ENDPOINT = 'https://api.pushover.net/1/messages.json'
+    _session = None  # send() can take this as a param
+
     _EPOCH_START = datetime.datetime(1970, 1, 1, tzinfo=pytz.utc)
 
     _DEFAULT_MAX_SEND_TRIES = 5
@@ -116,6 +120,19 @@ class Message(object):
     NORMAL = 0
     HIGH = 1
     # pullover does not support emergency priority messages
+
+    @classmethod
+    def __session(cls):
+        """
+        Retrieve a requests session to use within this class. Allows session
+        re-use.
+
+        :return: A new requests session if this is the first call, otherwise
+                 the existing one.
+        """
+        if cls._session is None:
+            cls._session = requests.session()
+        return cls._session
 
     def __init__(self, body, title=None, timestamp=None, url=None,
                  url_title=None, priority=NORMAL):
@@ -200,9 +217,8 @@ class Message(object):
         application.sign(request)
         user.sign(request)
 
-        with requests.session() as session:
-            prepared = session.prepare_request(request)
-            return SendResponse(send_request(session, prepared))
+        prepared = self.__session().prepare_request(request)
+        return SendResponse(send_request(self.__session(), prepared))
 
     def __str__(self):
         return '{0.__class__.__name__}({0._body})'.format(self)
