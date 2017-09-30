@@ -36,12 +36,13 @@ class TestServerSendError(unittest.TestCase):
 
 class TestSendResponse(unittest.TestCase):
 
-    _SUCCESS_JSON = {
+    SUCCESS_REQUEST = '647d2300-702c-4b38-8b2f-d56326ae460b'
+    SUCCESS_JSON = {
         'status': 1,
-        'request': '647d2300-702c-4b38-8b2f-d56326ae460b'
+        'request': SUCCESS_REQUEST
     }
 
-    _FAIL_JSON = {
+    _INVALID_USER_JSON = {
         'user': 'invalid',
         'errors': ['user identifier is invalid'],
         'status': 0,
@@ -56,11 +57,11 @@ class TestSendResponse(unittest.TestCase):
 
     def test_ok_true(self):
         self.assertTrue(
-            SendResponse(self._response(json=self._SUCCESS_JSON)).ok)
+            SendResponse(self._response(json=self.SUCCESS_JSON)).ok)
 
     def test_ok_false(self):
         self.assertFalse(
-            SendResponse(self._response(json=self._FAIL_JSON)).ok)
+            SendResponse(self._response(json=self._INVALID_USER_JSON)).ok)
 
     def test_raise_for_status_server_5xx(self):
         with self.assertRaises(ServerSendError):
@@ -73,11 +74,11 @@ class TestSendResponse(unittest.TestCase):
 
     def test_raise_for_status_client(self):
         with self.assertRaises(ClientSendError):
-            SendResponse(self._response(json=self._FAIL_JSON)) \
+            SendResponse(self._response(json=self._INVALID_USER_JSON)) \
                 .raise_for_status()
 
     def test_raise_for_status_ok(self):
-        SendResponse(self._response(json=self._SUCCESS_JSON)) \
+        SendResponse(self._response(json=self.SUCCESS_JSON)) \
             .raise_for_status()
 
 

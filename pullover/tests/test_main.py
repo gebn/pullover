@@ -9,9 +9,12 @@ import mock
 import sys
 import os
 import contextlib
+from six import StringIO
+import responses
 
 from pullover import __main__ as main, Message
 from pullover.__main__ import EnvDefault, DependencyAction, PriorityAction
+from pullover.tests import test_message
 
 
 @contextlib.contextmanager
@@ -220,3 +223,50 @@ class TestParseArgs(unittest.TestCase):
     def test_message(self):
         self.assertEqual(main._parse_argv(self._BASE_ARGV).message,
                          self._MESSAGE)
+
+
+class TestMain(unittest.TestCase):
+
+    _INVALID_APP_JSON = {
+        'token': 'invalid',
+        'errors': [
+            'application token is invalid'
+        ],
+        'status': 0,
+        'request': '6f2e75b0-8ad8-4c80-9e0f-3386947f727e'
+    }
+
+    def test_argparse_failure(self):
+        with self.assertRaises(SystemExit), _suppress_stderr():
+            main.main(['pullover'])
+
+    @mock.patch('sys.stderr', new_callable=StringIO)
+    @responses.activate
+    def test_invalid_app(self, mock_stderr):
+        responses.add(responses.POST, Message._ENDPOINT,
+                      json=self._INVALID_APP_JSON)
+        status_code = main.main(['pullover', '-a', 'invalid', '-u', 'valid',
+                                 'baz'])
+        self.assertEqual(mock_stderr.getvalue(),
+                         'application token is invalid' + os.linesep)
+        self.assertEqual(status_code, 1)
+
+    @mock.patch('sys.stdout', new_callable=StringIO)
+    @responses.activate
+    def test_valid(self, mock_stdout):
+        responses.add(responses.POST, Message._ENDPOINT,
+                      json=test_message.TestSendResponse.SUCCESS_JSON)
+        status_code = main.main(['pullover', '-a', 'valid', '-u', 'valid',
+                                 'baz'])
+        self.assertEqual(
+            mock_stdout.getvalue(),
+            test_message.TestSendResponse.SUCCESS_REQUEST + os.linesep)
+        self.assertEqual(status_code, 0)
+
+
+class TestMainCli(unittest.TestCase):
+
+    @mock.patch.object(main, 'main')
+    def test_success(self, mocked):
+        mocked.return_value = 0
+        self.assertEqual(main.main_cli(), 0)
