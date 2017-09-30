@@ -34,6 +34,27 @@ class EnvDefault(argparse.Action):
         setattr(namespace, self.dest, values)
 
 
+class DependencyAction(argparse.Action):
+    """
+    Ensures that if parameter A is specified, then B is also specified.
+    Indicate the `dest` of the required parameter with `depends_on`.
+    """
+
+    def __init__(self, option_strings, dest, depends_on, **kwargs):
+        super(DependencyAction, self).__init__(option_strings, dest, **kwargs)
+        if depends_on is None:
+            raise ValueError('Argument must have a dependency')
+        self._depends_on = depends_on
+        self._dest = dest
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values and getattr(namespace, self._depends_on) is None:
+            parser.error(
+                '{0} requires {1} to be specified'.format(option_string,
+                                                          self._depends_on))
+        setattr(namespace, self._dest, values)
+
+
 def _parse_argv(argv):
     """
     Interpret command line arguments.
@@ -80,6 +101,11 @@ def _parse_argv(argv):
     parser.add_argument('--url',
                         type=util.decode_cli_arg,
                         help='a url to include in footer of the message')
+    parser.add_argument('--url-title',
+                        action=DependencyAction,
+                        depends_on='url',
+                        type=util.decode_cli_arg,
+                        help='the URL title; requires --url')
     parser.add_argument('message',
                         type=util.decode_cli_arg,
                         help='the message content to send')
@@ -107,7 +133,7 @@ def main(argv):
     logger.debug(args)
 
     message = Message(args.message, args.title, args.timestamp, args.url,
-                      args.priority)
+                      args.url_title, args.priority)
     app = Application(args.app)
     user = User(args.user)
     response = message.send(app, user)

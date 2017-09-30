@@ -11,7 +11,7 @@ import os
 import contextlib
 
 from pullover import __main__ as main, Message
-from pullover.__main__ import EnvDefault
+from pullover.__main__ import EnvDefault, DependencyAction
 
 
 @contextlib.contextmanager
@@ -55,6 +55,28 @@ class TestEnvDefault(unittest.TestCase):
         parser.add_argument('-a', action=EnvDefault, env='SOMETHING')
         namespace = parser.parse_args(['-a', 'foo'])
         self.assertEqual(namespace.a, 'foo')
+
+
+class TestDependencyAction(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-a')
+        parser.add_argument('-b', action=DependencyAction, depends_on='a')
+        cls.parser = parser
+
+    def test_no_depends_on(self):
+        with self.assertRaises(ValueError):
+            DependencyAction('', '', None)
+
+    def test_depencency_violated(self):
+        with self.assertRaises(SystemExit), _suppress_stderr():
+            self.parser.parse_args(['-b', 'foo'])  # missing a
+
+    def test_dependency_satisfied(self):
+        namespace = self.parser.parse_args(['-a', 'foo', '-b', 'bar'])
+        self.assertEqual(namespace.b, 'bar')
 
 
 # TODO make this default, and only require a wrapper for when these *aren't*
@@ -152,6 +174,20 @@ class TestParseArgs(unittest.TestCase):
         url = 'https://gebn.co.uk'
         self.assertEqual(
             main._parse_argv(self._BASE_ARGV + ['--url', url]).url, url)
+
+    @_declare_app_user
+    def test_url_title_no_url(self):
+        with self.assertRaises(SystemExit), _suppress_stderr():
+            main._parse_argv(self._BASE_ARGV + ['--url-title', 'foo'])
+
+    @_declare_app_user
+    def test_url_title(self):
+        url = 'https://gebn.co.uk'
+        url_title = 'Personal Website'
+        self.assertEqual(
+            main._parse_argv(self._BASE_ARGV + ['--url', url, '--url-title',
+                                                url_title]).url_title,
+            url_title)
 
     @_declare_app_user
     def test_message_missing(self):

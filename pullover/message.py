@@ -118,7 +118,7 @@ class Message(object):
     # pullover does not support emergency priority messages
 
     def __init__(self, body, title=None, timestamp=None, url=None,
-                 priority=NORMAL):
+                 url_title=None, priority=NORMAL):
         """
         Initialise a new message.
 
@@ -127,12 +127,19 @@ class Message(object):
                       sending application will be shown.
         :param timestamp: The message datetime. Defaults to now.
         :param url: A supplementary URL to show underneath the message.
+        :param url_title: The title for the URL above. Requires URL be set.
         :param priority: The message priority.
+        :raises ValueError: If a URL title is provided, but no URL.
         """
+        if url_title is not None and url is None:
+            raise ValueError('A URL must be provided for a URL title to be '
+                             'specified')
+
         self._body = body
         self._title = title
         self._timestamp = timestamp
         self._url = url
+        self._url_title = url_title
         self._priority = priority
 
     def send(self, application, user, timeout=3, retry_interval=5,
@@ -187,6 +194,7 @@ class Message(object):
                 else int((self._timestamp - self._EPOCH_START)
                          .total_seconds()),
                 'url': self._url,
+                'url_title': self._url_title,
                 'priority': self._priority
             })
         application.sign(request)

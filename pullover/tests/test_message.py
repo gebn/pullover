@@ -89,12 +89,17 @@ class TestMessage(unittest.TestCase):
         datetime.timedelta(minutes=5)
     _EPOCH_SECONDS = int((_TIMESTAMP - Message._EPOCH_START).total_seconds())
     _URL = 'https://gebn.co.uk'
+    _URL_TITLE = 'Personal Website'
     _PRIORITY = Message.HIGH
     _MESSAGE = Message(_BODY)
     _APP_TOKEN = 'foo'
     _APP = Application(_APP_TOKEN)
     _USER_KEY = 'bar'
     _USER = User(_USER_KEY)
+
+    def test_init_url_title_no_url(self):
+        with self.assertRaises(ValueError):
+            Message(self._BODY, url_title=self._URL_TITLE)
 
     @responses.activate
     def test_send_user_agent(self):
@@ -121,6 +126,7 @@ class TestMessage(unittest.TestCase):
             self.assertEqual(params['title'][0], self._TITLE)
             self.assertEqual(params['timestamp'][0], str(self._EPOCH_SECONDS))
             self.assertEqual(params['url'][0], self._URL)
+            self.assertEqual(params['url_title'][0], self._URL_TITLE)
             self.assertEqual(params['priority'][0], str(self._PRIORITY))
             return 200, {}, ''
 
@@ -128,7 +134,7 @@ class TestMessage(unittest.TestCase):
                                callback=callback)
 
         Message(self._BODY, self._TITLE, self._TIMESTAMP, self._URL,
-                self._PRIORITY).send(self._APP, self._USER)
+                self._URL_TITLE, self._PRIORITY).send(self._APP, self._USER)
         self.assertEqual(len(responses.calls), 1)  # no retry on response.ok
 
     @responses.activate
