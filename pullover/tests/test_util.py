@@ -53,4 +53,6 @@ class TestLogLevelFromVerbosity(unittest.TestCase):
 
     def test_debug(self):
         self.assertEqual(util.log_level_from_vebosity(2), logging.DEBUG)
+
+    def test_default(self):
         self.assertEqual(util.log_level_from_vebosity(None), logging.DEBUG)
