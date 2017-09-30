@@ -146,7 +146,7 @@ class Message(object):
                         Pushover. Defaults to 3s.
         :param retry_interval: The amount of time to wait between requests.
                                Defaults to 5s.
-        :param max_tries: The number of failures to allow before giving up.
+        :param max_tries: The number of attempts to make before giving up.
                           Defaults to 5.
         :return: A message response object.
         """
