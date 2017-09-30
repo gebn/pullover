@@ -24,6 +24,20 @@ Features
 - Unit and integration tested
 - Signed PyPi releases
 
+Limitations
+-----------
+
+Pullover does not support:
+
+- Anything other than sending messages
+- Sending messages to a subset of a user's devices
+- Emergency messages
+- Customising the notification sound
+
+If you need one of these, I'd recommend using Karan Lyons's Chump_ wrapper.
+
+.. _Chump: https://github.com/karanlyons/chump
+
 Installation
 ------------
 
