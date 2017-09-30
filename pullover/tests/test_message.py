@@ -142,7 +142,7 @@ class TestMessage(unittest.TestCase):
         response = self._MESSAGE.send(self._APP, self._USER,
                                       retry_interval=0.001)  # to speed up test
         self.assertFalse(response.ok)
-        self.assertEqual(len(responses.calls), 5)
+        self.assertEqual(len(responses.calls), Message._DEFAULT_MAX_SEND_TRIES)
 
     @responses.activate
     def test_send_no_retry_4xx(self):

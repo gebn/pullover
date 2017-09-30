@@ -109,6 +109,8 @@ class Message(object):
     _ENDPOINT = 'https://api.pushover.net/1/messages.json'
     _EPOCH_START = datetime.datetime(1970, 1, 1, tzinfo=pytz.utc)
 
+    _DEFAULT_MAX_SEND_TRIES = 5
+
     LOWEST = -2
     LOW = -1
     NORMAL = 0
@@ -134,7 +136,7 @@ class Message(object):
         self._priority = priority
 
     def send(self, application, user, timeout=3, retry_interval=5,
-             max_tries=5):
+             max_tries=_DEFAULT_MAX_SEND_TRIES):
         """
         Send this message to a user, making it originate from a given
         application. This method guarantees not to throw any exceptions.
