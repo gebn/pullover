@@ -11,7 +11,7 @@ import os
 import contextlib
 
 from pullover import __main__ as main, Message
-from pullover.__main__ import EnvDefault, DependencyAction
+from pullover.__main__ import EnvDefault, DependencyAction, PriorityAction
 
 
 @contextlib.contextmanager
@@ -77,6 +77,28 @@ class TestDependencyAction(unittest.TestCase):
     def test_dependency_satisfied(self):
         namespace = self.parser.parse_args(['-a', 'foo', '-b', 'bar'])
         self.assertEqual(namespace.b, 'bar')
+
+
+class TestPriorityAction(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-p',
+                            action=PriorityAction,
+                            default=Message.NORMAL)
+        cls.parser = parser
+
+    def test_invalid_value(self):
+        with self.assertRaises(SystemExit), _suppress_stderr():
+            self.parser.parse_args(['-p', 'invalid'])
+
+    def test_integral(self):
+        self.assertEqual(self.parser.parse_args(['-p', '-1']).p, -1)
+
+    def test_string(self):
+        self.assertEqual(self.parser.parse_args(['-p', 'high']).p,
+                         Message.HIGH)
 
 
 # TODO make this default, and only require a wrapper for when these *aren't*

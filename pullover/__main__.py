@@ -54,6 +54,29 @@ class DependencyAction(argparse.Action):
         setattr(namespace, self.dest, values)
 
 
+class PriorityAction(argparse.Action):
+    """
+    Processes the --priority value.
+    """
+
+    _PRIORITIES = {
+        str(Message.LOWEST): Message.LOWEST,
+        'lowest': Message.LOWEST,
+        str(Message.LOW): Message.LOW,
+        'low': Message.LOW,
+        str(Message.NORMAL): Message.NORMAL,
+        'normal': Message.NORMAL,
+        str(Message.HIGH): Message.HIGH,
+        'high': Message.HIGH
+    }
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values not in self._PRIORITIES.keys():
+            parser.error("'{0}' is not a recognised priority".format(values))
+
+        setattr(namespace, self.dest, self._PRIORITIES[values])
+
+
 def _parse_argv(argv):
     """
     Interpret command line arguments.
@@ -84,11 +107,10 @@ def _parse_argv(argv):
                         help='the user key to send to; defaults to '
                              'PUSHOVER_USER_KEY')
     parser.add_argument('-p', '--priority',
-                        type=int,
-                        help='the integer priority of the message',
-                        choices=(Message.LOWEST, Message.LOW, Message.NORMAL,
-                                 Message.HIGH),
-                        default=0)
+                        action=PriorityAction,
+                        help='the priority of the message, either an integer '
+                             "or string (e.g. '0' or 'normal')",
+                        default=Message.NORMAL)
     parser.add_argument('-t', '--title',
                         type=util.decode_cli_arg,
                         help='the title of the message; defaults to the name '
