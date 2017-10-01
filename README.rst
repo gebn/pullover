@@ -7,6 +7,8 @@ pullover
    :target: https://pypi.python.org/pypi/pullover
 .. image:: https://img.shields.io/pypi/pyversions/pullover.svg
    :target: https://pypi.python.org/pypi/pullover
+.. image:: https://readthedocs.org/projects/pullover/badge/?version=latest
+   :target: http://pullover.readthedocs.io/en/latest/?badge=latest
 .. image:: https://travis-ci.org/gebn/pullover.svg?branch=master
    :target: https://travis-ci.org/gebn/pullover
 .. image:: https://coveralls.io/repos/github/gebn/pullover/badge.svg?branch=master
@@ -48,7 +50,9 @@ Installation
 Module
 -------
 
-The following code snippets demonstrate the main features of pullover.
+The following code snippets demonstrate the main features of pullover. For an exhaustive guide, see the documentation_.
+
+.. _documentation: https://pullover.readthedocs.io/en/latest/
 
 High-level
 ~~~~~~~~~~
