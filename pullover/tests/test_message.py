@@ -42,11 +42,12 @@ class TestSendResponse(unittest.TestCase):
         'request': SUCCESS_REQUEST
     }
 
-    _INVALID_USER_JSON = {
+    INVALID_USER_REQUEST = '5042853c-402d-4a18-abcb-168734a801de'
+    INVALID_USER_JSON = {
         'user': 'invalid',
         'errors': ['user identifier is invalid'],
         'status': 0,
-        'request': '5042853c-402d-4a18-abcb-168734a801de'
+        'request': INVALID_USER_REQUEST
     }
 
     @staticmethod
@@ -61,7 +62,7 @@ class TestSendResponse(unittest.TestCase):
 
     def test_ok_false(self):
         self.assertFalse(
-            SendResponse(self._response(json=self._INVALID_USER_JSON)).ok)
+            SendResponse(self._response(json=self.INVALID_USER_JSON)).ok)
 
     def test_raise_for_status_server_5xx(self):
         with self.assertRaises(ServerSendError):
@@ -74,7 +75,7 @@ class TestSendResponse(unittest.TestCase):
 
     def test_raise_for_status_client(self):
         with self.assertRaises(ClientSendError):
-            SendResponse(self._response(json=self._INVALID_USER_JSON)) \
+            SendResponse(self._response(json=self.INVALID_USER_JSON)) \
                 .raise_for_status()
 
     def test_raise_for_status_ok(self):
