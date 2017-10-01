@@ -6,14 +6,14 @@ import six
 @six.python_2_unicode_compatible
 class Application(object):
     """
-    A Pushover application.
+    Encapsulates a Pushover application token, and signs requests with it.
     """
 
     def __init__(self, token):
         """
         Initialise a new application.
 
-        :param token: The application token.
+        :param str token: The application token.
         """
         self._token = token
 
@@ -22,7 +22,7 @@ class Application(object):
         Modify a request to indicate that a new message was sent by this
         application.
 
-        :param request: The request to sign.
+        :param requests.Request request: The request to sign.
         """
         request.data['token'] = self._token
 

@@ -6,14 +6,14 @@ import six
 @six.python_2_unicode_compatible
 class User(object):
     """
-    A Pushover user.
+    Encapsulates a Pushover user key, and signs requests with it.
     """
 
     def __init__(self, key):
         """
         Initialise a new user.
 
-        :param key: The user key.
+        :param str key: The user key.
         """
         self._key = key
 
@@ -21,7 +21,7 @@ class User(object):
         """
         Modify a request to indicate that a new message was sent by this user.
 
-        :param request: The request to sign.
+        :param requests.Request request: The request to sign.
         """
         request.data['user'] = self._key
 

@@ -17,7 +17,9 @@ logger = logging.getLogger(__name__)
 
 class SendError(PulloverError):
     """
-    Raised by SendResponse.raise_for_status() if a request was not successful.
+    Derived instances of this abstract class are raised by
+    :meth:`~pullover.message.SendResponse.raise_for_status()` if a request was
+    not successful.
     """
     __metaclass__ = abc.ABCMeta
 
@@ -31,11 +33,16 @@ class ClientSendError(SendError):
         """
         Initialise a new error.
 
-        :param status: The response status. Will not be 1.
-        :param errors: An array of strings containing errors in the request.
+        :param int status: The response status. Will not be 1.
+        :param list(str) errors: An array of strings containing errors in the
+                                 request.
         """
         super(ClientSendError, self).__init__()
+
+        #: The integer status. Will not be 1.
         self.status = status
+
+        #: A list of textual errors
         self.errors = errors
 
 
@@ -48,9 +55,11 @@ class ServerSendError(SendError):
         """
         Initialise a new error.
 
-        :param response: The raw requests response received.
+        :param requests.Response response: The raw requests response received.
         """
         super(ServerSendError, self).__init__()
+
+        #: The raw requests response received
         self.response = response
 
 
@@ -65,6 +74,7 @@ class SendResponse(object):
         Find whether the response indicates the message was successfully sent.
 
         :return: True if it was, false otherwise.
+        :rtype: bool
         """
         return self.status == 1
 
@@ -72,13 +82,22 @@ class SendResponse(object):
         """
         Initialise a new response.
 
-        :param response: The requests response to parse.
+        :param requests.Response response: The requests response to parse.
         """
         self._response = response
         try:
             json = response.json()
+
+            #: The integer request status returned by Pushover. This will be
+            # ``1`` in success scenarios.
             self.status = json['status']
+
+            #: A randomly generated unique token associated with the request,
+            #: e.g. ``5042853c-402d-4a18-abcb-168734a801de``.
             self.id = json['request']
+
+            #: A list of textual errors detailing which parameters were
+            #: invalid, if any.
             self.errors = json['errors'] if 'errors' in json else []
         except ValueError:
             self.status = None
@@ -115,10 +134,20 @@ class Message(object):
 
     _DEFAULT_MAX_SEND_TRIES = 5
 
+    #: No notifications are generated.
     LOWEST = -2
+
+    #: A popup, but no sound of vibration.
     LOW = -1
+
+    #: Popup, sound and vibration. If delivered during quiet hours, this
+    #: effectively becomes :attr:`~pullover.Message.LOW`.
     NORMAL = 0
+
+    #: Same as :attr:`~pullover.Message.NORMAL`, except bypasses quiet hours,
+    #: and shown in red.
     HIGH = 1
+
     # pullover does not support emergency priority messages
 
     @classmethod
@@ -129,6 +158,7 @@ class Message(object):
 
         :return: A new requests session if this is the first call, otherwise
                  the existing one.
+        :rtype: requests.Session
         """
         if cls._session is None:
             cls._session = requests.session()
@@ -139,13 +169,16 @@ class Message(object):
         """
         Initialise a new message.
 
-        :param body: The contents of the message.
-        :param title: The message heading. If not provided, the name of the
-                      sending application will be shown.
-        :param timestamp: The message datetime. Defaults to now.
-        :param url: A supplementary URL to show underneath the message.
-        :param url_title: The title for the URL above. Requires URL be set.
-        :param priority: The message priority.
+        :param str body: The contents of the message.
+        :param str title: The message heading. If not provided, the name of the
+                          sending application will be shown.
+        :param datetime.datetime timestamp: The message datetime. Defaults to
+                                            now.
+        :param str url: A supplementary URL to show underneath the message.
+        :param str url_title: The title for the URL above. Requires URL be set.
+        :param int priority: The message priority, e.g.
+                             :attr:`~pullover.Message.HIGH`. Defaults to
+                             :attr:`~pullover.Message.NORMAL`.
         :raises ValueError: If a URL title is provided, but no URL.
         """
         if url_title is not None and url is None:
@@ -165,16 +198,20 @@ class Message(object):
         Send this message to a user, making it originate from a given
         application. This method guarantees not to throw any exceptions.
 
-        :param application: The application to send the message from.
-        :param user: The user to send the message to. All devices will receive
-                     it.
-        :param timeout: The number of seconds to allow for each request to
-                        Pushover. Defaults to 3s.
-        :param retry_interval: The amount of time to wait between requests.
-                               Defaults to 5s.
-        :param max_tries: The number of attempts to make before giving up.
-                          Defaults to 5.
+        :param Application application: The application to send the message
+                                        from.
+        :param User user: The user to send the message to. All devices will
+                          receive it.
+        :param float timeout: The number of seconds to allow for each request
+                              to Pushover. Defaults to 3s.
+        :param float retry_interval: The amount of time to wait between
+                                     requests. Defaults to 5s. Note, this is
+                                     the `minimum recommended by Pushover
+                                     <https://pushover.net/api#friendly>`_.
+        :param int max_tries: The number of attempts to make before giving up.
+                              Defaults to 5.
         :return: A message response object.
+        :rtype: SendResponse
         """
 
         logger.info('Sending %s to %s using %s', self, user, application)
@@ -183,9 +220,10 @@ class Message(object):
             """
             Decides whether to retry sending a message given a response.
 
-            :param response: The response to analyse.
+            :param requests.Response response: The response to analyse.
             :return: True if the original request should be retried; false
                      otherwise.
+            :rtype: bool
             """
             return not response.ok and not (400 <= response.status_code < 500)
 
@@ -194,6 +232,14 @@ class Message(object):
                               max_tries=max_tries,
                               interval=retry_interval)
         def send_request(sess, prepped):
+            """
+            Sends a request to Pushover.
+
+            :param requests.Session sess: The session to send the request with.
+            :param requests.PreparedRequest prepped: The request to send.
+            :return: The request response.
+            :rtype: requests.Response
+            """
             return sess.send(prepped, timeout=timeout)
 
         request = requests.Request(

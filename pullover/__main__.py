@@ -81,8 +81,9 @@ def _parse_argv(argv):
     """
     Interpret command line arguments.
 
-    :param argv: `sys.argv`
+    :param list(str) argv: `sys.argv`
     :return: The populated argparse namespace.
+    :rtype: argparse.Namespace
     """
 
     parser = argparse.ArgumentParser(prog=pullover.__title__,
@@ -137,7 +138,8 @@ def main(argv):
     """
     pullover's entry point.
 
-    :param argv: Command-line arguments, with the program in position 0.
+    :param list(str) argv: Command-line arguments, with the program in position
+                           0.
     """
 
     args = _parse_argv(argv)
@@ -171,6 +173,7 @@ def main_cli():
     pullover's command-line entry point.
 
     :return: The return code of the program.
+    :rtype: int
     """
     status = main(sys.argv)
     logger.debug('Returning exit status %d', status)

@@ -32,11 +32,12 @@ def send(body, user_key, app_token, **kwargs):
     """
     Send a message to a user from an application.
 
-    :param body: The body of the message to send.
-    :param user_key: The user key to send to.
-    :param app_token: The application token to send from.
-    :param kwargs: Additional keyword arguments to pass to Message's
-                   initialiser.
+    :param str body: The body of the message to send.
+    :param str user_key: The user key to send to.
+    :param str app_token: The application token to send from.
+    :param kwargs: Additional keyword arguments to pass to
+                   :class:`~pullover.Message`'s initialiser.
     :return: A message send response instance.
+    :rtype: SendResponse
     """
     return Message(body, **kwargs).send(Application(app_token), User(user_key))

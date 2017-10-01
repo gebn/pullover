@@ -4,6 +4,6 @@ import abc
 
 class PulloverError(Exception):
     """
-    The base class of all errors raised by Pullover.
+    The abstract base class of all errors raised by pullover.
     """
     __metaclass__ = abc.ABCMeta
