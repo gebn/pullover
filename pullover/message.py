@@ -223,7 +223,7 @@ class Message(object):
                                      the `minimum recommended by Pushover
                                      <https://pushover.net/api#friendly>`_.
         :param int max_tries: The number of attempts to make before giving up.
-                              Defaults to 5.
+                              Defaults to 5. Set this to 1 to disable back-off.
         :return: The result of the send attempt.
         :rtype: SendResponse
         """
