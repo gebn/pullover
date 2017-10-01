@@ -230,16 +230,16 @@ class Message(object):
 
         logger.info('Sending %s to %s using %s', self, user, application)
 
-        def should_retry(response):
+        def should_retry(resp):
             """
             Decides whether to retry sending a message given a response.
 
-            :param requests.Response response: The response to analyse.
+            :param requests.Response resp: The response to analyse.
             :return: True if the original request should be retried; false
                      otherwise.
             :rtype: bool
             """
-            return not response.ok and not (400 <= response.status_code < 500)
+            return not resp.ok and not (400 <= resp.status_code < 500)
 
         @backoff.on_predicate(backoff.constant,
                               should_retry,
@@ -278,7 +278,9 @@ class Message(object):
         user.sign(request)
 
         prepared = self.__session().prepare_request(request)
-        return SendResponse(send_request(self.__session(), prepared))
+        response = send_request(self.__session(), prepared)
+        logger.debug('Request time: %fs', response.elapsed.total_seconds())
+        return SendResponse(response)
 
     def __str__(self):
         return '{0.__class__.__name__}({0._body})'.format(self)
