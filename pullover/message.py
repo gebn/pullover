@@ -293,7 +293,7 @@ class PreparedMessage(object):
         """
         Initialise a new prepared message.
 
-        :param Message message: The mesage to send.
+        :param Message message: The message to send.
         :param Application application: The application to send the message
                                         from.
         :param User user: The user to send the message to. All devices will
