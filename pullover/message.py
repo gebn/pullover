@@ -192,6 +192,20 @@ class Message(object):
         self._url_title = url_title
         self._priority = priority
 
+    def prepare(self, application, user):
+        """
+        Package up this message with a sending application and user, ready for
+        sending.
+
+        :param Application application: The application to send the message
+                                        from.
+        :param User user: The user to send the message to. All devices will
+                          receive it.
+        :return: A prepared message object.
+        :rtype: PreparedMessage
+        """
+        return PreparedMessage(self, application, user)
+
     def send(self, application, user, timeout=3, retry_interval=5,
              max_tries=_DEFAULT_MAX_SEND_TRIES):
         """
@@ -210,7 +224,7 @@ class Message(object):
                                      <https://pushover.net/api#friendly>`_.
         :param int max_tries: The number of attempts to make before giving up.
                               Defaults to 5.
-        :return: A message response object.
+        :return: The result of the send attempt.
         :rtype: SendResponse
         """
 
@@ -268,3 +282,34 @@ class Message(object):
 
     def __str__(self):
         return '{0.__class__.__name__}({0._body})'.format(self)
+
+
+class PreparedMessage(object):
+    """
+    A message together with its sending application and receiving user.
+    """
+
+    def __init__(self, message, application, user):
+        """
+        Initialise a new prepared message.
+
+        :param Message message: The mesage to send.
+        :param Application application: The application to send the message
+                                        from.
+        :param User user: The user to send the message to. All devices will
+                          receive it.
+        """
+        self._message = message
+        self._application = application
+        self._user = user
+
+    def send(self, **kwargs):
+        """
+        Send this prepared message.
+
+        :param kwargs: Additional parameters to pass to
+                       :meth:`Message.send() <pullover.Message.send()>`.
+        :return: The result of the send attempt.
+        :rtype: SendResponse
+        """
+        return self._message.send(self._application, self._user, **kwargs)

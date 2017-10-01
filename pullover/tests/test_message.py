@@ -166,3 +166,18 @@ class TestMessage(unittest.TestCase):
 
     def test_str(self):
         self.assertEqual(str(self._MESSAGE), 'Message({0})'.format(self._BODY))
+
+
+class TestPreparedMessage(unittest.TestCase):
+
+    @responses.activate
+    def test_success(self):
+        responses.add(responses.POST, Message._ENDPOINT,
+                      json=TestSendResponse.SUCCESS_JSON)
+        message = Message('message')
+        app = Application('app')
+        user = User('user')
+        response = message.prepare(app, user).send()
+        self.assertTrue(response.ok)
+        self.assertEqual(response.id,
+                         TestSendResponse.SUCCESS_REQUEST)
