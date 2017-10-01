@@ -18,7 +18,7 @@ def _read_file(name, encoding='utf-8'):
 
 setup(
     name='pullover',
-    version='1.0.0-rc.3',
+    version='1.0.0',
     description='The simplest Pushover API wrapper for Python.',
     long_description=_read_file('README.rst'),
     license='MIT',
