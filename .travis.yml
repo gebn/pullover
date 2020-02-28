@@ -10,6 +10,9 @@ python:
  - 3.6-dev
  - 3.7-dev
  - nightly
+install:
+ - pip install pipenv
+ - pipenv install
 script:
  - coverage run setup.py test
 after_success:
