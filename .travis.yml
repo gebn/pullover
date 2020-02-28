@@ -13,7 +13,7 @@ before_install:
  - pip install --upgrade pip
  - pip install pipenv
 install:
- - pipenv install
+ - pipenv install --dev
 script:
  - pipenv run coverage run setup.py test
 after_success:
