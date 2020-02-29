@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 import codecs
 
 
-def _read_file(name, encoding='utf-8'):
+def _read_file(name, encoding="utf-8"):
     """
     Read the contents of a file.
 
@@ -17,48 +17,44 @@ def _read_file(name, encoding='utf-8'):
 
 
 setup(
-    name='pullover',
-    version='1.1.1',
-    description='The simplest Pushover API wrapper for Python.',
-    long_description=_read_file('README.rst'),
-    license='MIT',
-    url='https://github.com/gebn/pullover',
-    author='George Brighton',
-    author_email='oss@gebn.co.uk',
+    name="pullover",
+    version="1.1.1",
+    description="The simplest Pushover API wrapper for Python.",
+    long_description=_read_file("README.rst"),
+    license="MIT",
+    url="https://github.com/gebn/pullover",
+    author="George Brighton",
+    author_email="oss@gebn.co.uk",
     packages=find_packages(),
     zip_safe=True,
     install_requires=[
-        'backoff',
-        'requests',
-        'python-dateutil',
-        'pytz',
-        'six>=1.9.0'
+        "backoff==1.10.0",
+        "certifi==2019.11.28",
+        "chardet==3.0.4",
+        "idna==2.9",
+        "python-dateutil==2.8.1",
+        "pytz==2019.3",
+        "requests==2.23.0",
+        "six==1.14.0",
+        "urllib3==1.25.8",
     ],
-    test_suite='nose.collector',
-    tests_require=[
-        'nose',
-        'mock'
-    ],
+    test_suite="nose.collector",
+    tests_require=["nose", "coverage", "coveralls", "mock", "responses", "Sphinx"],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Console',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    entry_points={
-        'console_scripts': [
-            'pullover = pullover.__main__:main_cli',
-        ]
-    }
+    entry_points={"console_scripts": ["pullover = pullover.__main__:main_cli",]},
 )
