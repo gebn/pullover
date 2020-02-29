@@ -18,6 +18,3 @@ six = ">=1.9.0"
 python-dateutil = "*"
 pytz = "*"
 nose = "*"
-
-[requires]
-python_version = "3.8"
