@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import argparse
 import unittest
 from unittest import mock
@@ -8,8 +6,8 @@ import datetime
 import pytz
 import sys
 import os
+import io
 import contextlib
-from six import StringIO
 import responses
 
 from pullover import __main__ as main, Message
@@ -240,7 +238,7 @@ class TestMain(unittest.TestCase):
         with self.assertRaises(SystemExit), _suppress_stderr():
             main.main(['pullover'])
 
-    @mock.patch('sys.stderr', new_callable=StringIO)
+    @mock.patch('sys.stderr', new_callable=io.StringIO)
     @responses.activate
     def test_invalid_app(self, mock_stderr):
         responses.add(responses.POST, Message._ENDPOINT,
@@ -251,7 +249,7 @@ class TestMain(unittest.TestCase):
                          'application token is invalid' + os.linesep)
         self.assertEqual(status_code, 1)
 
-    @mock.patch('sys.stdout', new_callable=StringIO)
+    @mock.patch('sys.stdout', new_callable=io.StringIO)
     @responses.activate
     def test_valid(self, mock_stdout):
         responses.add(responses.POST, Message._ENDPOINT,

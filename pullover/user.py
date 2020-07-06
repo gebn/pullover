@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-import six
-
-
-@six.python_2_unicode_compatible
-class User(object):
+class User:
     """
     Encapsulates a Pushover user key, and signs requests with it.
     """

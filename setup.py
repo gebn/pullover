@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from setuptools import setup, find_packages
 import codecs
 
@@ -35,7 +33,6 @@ setup(
         "python-dateutil==2.8.1",
         "pytz==2019.3",
         "requests==2.23.0",
-        "six==1.14.0",
         "urllib3==1.25.8",
     ],
     test_suite="nose.collector",

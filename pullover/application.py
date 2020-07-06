@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-import six
-
-
-@six.python_2_unicode_compatible
-class Application(object):
+class Application:
     """
     Encapsulates a Pushover application token, and signs requests with it.
     """

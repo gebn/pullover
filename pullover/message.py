@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import logging
-import six
 import abc
 import datetime
 import pytz
@@ -63,7 +60,7 @@ class ServerSendError(SendError):
         self.response = response
 
 
-class SendResponse(object):
+class SendResponse:
     """
     Represents the Pushover API's response to a message send request.
     """
@@ -119,8 +116,7 @@ class SendResponse(object):
             raise ClientSendError(self.status, self.errors)
 
 
-@six.python_2_unicode_compatible
-class Message(object):
+class Message:
     """
     Represents a Pushover message.
     """
@@ -286,7 +282,7 @@ class Message(object):
         return '{0.__class__.__name__}({0._body})'.format(self)
 
 
-class PreparedMessage(object):
+class PreparedMessage:
     """
     A message together with its sending application and receiving user.
     """

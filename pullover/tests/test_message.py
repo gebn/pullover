@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import unittest
 import datetime
 import pytz
 import responses
 import requests
-from six.moves import urllib_parse
+import urllib.parse
 
 import pullover
 from pullover import Application, User
@@ -120,7 +118,7 @@ class TestMessage(unittest.TestCase):
     @responses.activate
     def test_send_user_fields(self):
         def callback(request):
-            params = urllib_parse.parse_qs(request.body)
+            params = urllib.parse.parse_qs(request.body)
             self.assertEqual(request.method, 'POST')
             self.assertEqual(params['token'][0], self._APP_TOKEN)
             self.assertEqual(params['user'][0], self._USER_KEY)

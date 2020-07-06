@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, division
 import unittest
 import sys
 import logging
-import six
+import io
 
 from pullover import util
 
@@ -14,33 +12,11 @@ class TestPrintError(unittest.TestCase):
 
     def test_stream(self):
         try:
-            sys.stderr = six.StringIO()
+            sys.stderr = io.StringIO()
             util.print_error(self._MESSAGE)
             self.assertEquals(sys.stderr.getvalue(), self._MESSAGE + '\n')
         finally:
             sys.stderr = sys.__stderr__
-
-
-class TestDecodeCliArg(unittest.TestCase):
-
-    _ARG_VALUE = 'test_arg_value'
-
-    def test_empty(self):
-        with self.assertRaises(ValueError):
-            util.decode_cli_arg(None)
-
-    @unittest.skipUnless(sys.version_info.major == 2,
-                         'Only applies to Python 2')
-    def test_valid_2(self):
-        self.assertEqual(
-            util.decode_cli_arg(
-                self._ARG_VALUE.encode(sys.getfilesystemencoding())),
-            self._ARG_VALUE)
-
-    @unittest.skipUnless(sys.version_info.major == 3,
-                         'Only applies to Python 3')
-    def test_valid_3(self):
-        self.assertEqual(util.decode_cli_arg(self._ARG_VALUE), self._ARG_VALUE)
 
 
 class TestLogLevelFromVerbosity(unittest.TestCase):

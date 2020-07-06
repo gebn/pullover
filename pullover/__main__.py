@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
 import logging
 import sys
 import os
@@ -98,13 +96,11 @@ def _parse_argv(argv):
     parser.add_argument('-a', '--app',
                         action=EnvDefault,
                         env='PUSHOVER_APP_TOKEN',
-                        type=util.decode_cli_arg,
                         help='the application token to send from; defaults to '
                              'PUSHOVER_APP_TOKEN')
     parser.add_argument('-u', '--user',
                         action=EnvDefault,
                         env='PUSHOVER_USER_KEY',
-                        type=util.decode_cli_arg,
                         help='the user key to send to; defaults to '
                              'PUSHOVER_USER_KEY')
     parser.add_argument('-p', '--priority',
@@ -113,7 +109,6 @@ def _parse_argv(argv):
                              "or string (e.g. '0' or 'normal')",
                         default=Message.NORMAL)
     parser.add_argument('-t', '--title',
-                        type=util.decode_cli_arg,
                         help='the title of the message; defaults to the name '
                              'of the sending application')
     parser.add_argument('--timestamp',
@@ -121,15 +116,12 @@ def _parse_argv(argv):
                         help='the timestamp of the message, in ISO 8601 '
                              'format; defaults to now')
     parser.add_argument('--url',
-                        type=util.decode_cli_arg,
                         help='a url to include in footer of the message')
     parser.add_argument('--url-title',
                         action=DependencyAction,
                         depends_on='url',
-                        type=util.decode_cli_arg,
                         help='the URL title; requires --url')
     parser.add_argument('message',
-                        type=util.decode_cli_arg,
                         help='the message content to send')
     return parser.parse_args(argv[1:])
 

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function, division
 import logging
 import sys
 
@@ -11,25 +9,6 @@ def print_error(msg):
     :param str msg: The message to print.
     """
     print(msg, file=sys.stderr)
-
-
-def decode_cli_arg(arg):
-    """
-    Turn a bytestring provided by :mod:`argparse` into unicode.
-
-    :param str arg: The bytestring to decode.
-    :return: The argument as a unicode object.
-    :rtype: str
-    :raises ValueError: If arg is None.
-    """
-    if arg is None:
-        raise ValueError('Argument cannot be None')
-
-    if sys.version_info.major == 3:
-        # already decoded
-        return arg
-
-    return arg.decode(sys.getfilesystemencoding())
 
 
 def log_level_from_vebosity(verbosity):
