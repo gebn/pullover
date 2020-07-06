@@ -39,7 +39,7 @@ setup(
         "urllib3==1.25.8",
     ],
     test_suite="nose.collector",
-    tests_require=["nose", "coverage", "coveralls", "mock", "responses", "Sphinx"],
+    tests_require=["nose", "coverage", "coveralls", "responses", "Sphinx"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",

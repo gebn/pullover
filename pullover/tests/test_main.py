@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 import argparse
 import unittest
+from unittest import mock
 import functools
 import datetime
 import pytz
-import mock
 import sys
 import os
 import contextlib
