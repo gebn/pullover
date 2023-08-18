@@ -27,7 +27,7 @@ setup(
     zip_safe=True,
     install_requires=[
         "backoff==1.10.0",
-        "certifi==2022.12.7",
+        "certifi==2023.7.22",
         "chardet==3.0.4",
         "idna==2.10",
         "python-dateutil==2.8.1",
