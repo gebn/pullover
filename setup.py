@@ -33,7 +33,7 @@ setup(
         "python-dateutil==2.8.1",
         "pytz==2020.1",
         "requests==2.31.0",
-        "urllib3==1.26.5",
+        "urllib3==1.26.17",
     ],
     test_suite="nose.collector",
     tests_require=["nose", "coverage", "coveralls", "responses", "Sphinx"],
