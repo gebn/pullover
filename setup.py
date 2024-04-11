@@ -29,7 +29,7 @@ setup(
         "backoff==1.10.0",
         "certifi==2023.7.22",
         "chardet==3.0.4",
-        "idna==2.10",
+        "idna==3.7",
         "python-dateutil==2.8.1",
         "pytz==2020.1",
         "requests==2.31.0",
