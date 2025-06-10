@@ -32,7 +32,7 @@ setup(
         "idna==3.7",
         "python-dateutil==2.8.1",
         "pytz==2020.1",
-        "requests==2.32.2",
+        "requests==2.32.4",
         "urllib3==1.26.19",
     ],
     test_suite="nose.collector",
